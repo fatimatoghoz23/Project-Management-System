@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en"  dir="rtl" >
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="main.css">
+  <style>
+    *{
+  padding: 0;
+  margin: 0;
+}
+body{
+  background: #222;
+  color: #fff;
+}
+.crud{
+  width: 90%;
+  margin: auto;
+}
+.head{
+  text-align: center;
+  text-transform: uppercase;
+  margin: 10px;
+}
+input{
+  width: 100%;
+  height: 30px;
+  outline: none;
+  border: none;
+  background: #111;
+  margin: 4px 0;
+  border-radius: 4px;
+  padding: 4px;
+  color: #fff;
+  font-size: 20px;
+}
+input:focus{
+  background-color: #000;
+  transform: scale(1.1);
+}
+.price input{
+  width: 40%;
+}
+#total{
+  background-color: coral;
+  padding: 5px 2px;
+  border-radius: 4px;
+  font-size: 20px;
+}
+#total::before{
+  content: 'Total: ';
+}
+#total2{
+  background-color: coral;
+  padding: 5px 2px;
+  border-radius: 4px;
+  width: 30%;
+  margin-left: 30px;
+    font-size: 20px;
+
+}
+#total2::before{
+  content: 'السعر الكلي: ';
+}
+
+#count{
+width: 70%;
+}
+button{
+  width: 100%;
+  height: 30px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  background-color: chocolate;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+button:hover{
+  background-color: rgb(125, 63, 18);
+letter-spacing: 1px;
+}
+.btnsearch{
+  display: flex;
+  justify-content: space-between;
+}
+.btnsearch button{
+  width: 45%;
+}
+table{
+  width: 100%;
+  text-align: center;
+  margin: 10px 0;
+  position: absolute;
+  left:0px;
+  font-size: 16px;
+  
+}
+table th{
+  text-transform: uppercase;
+}
+th,td{
+  padding: 5px;
+}
+#deleteAll{
+  margin: 7px 0;
+  
+}
+.hide{
+  width: 32%;
+  height: 70px;
+  margin-top: 7px;
+  background-color: rgba(110, 96, 91, 0.821);
+  font-size: 20px;
+}
+.show{
+  width: 30%;
+  height: 70px;
+  margin-top: 7px;
+}
+
+#tbody2{
+  background-color: rgb(238, 234, 234);
+  display: block;
+  text-align: center;
+  color: #000;
+  font-size: 30px;
+  /* display: -webkit-flex; 
+  -webkit-flex-direction: column-reverse; 
+  flex-direction: column-reverse; */
+}
+#tbody2 td{
+  display: flex;
+}
+#tbody2 th{
+  display: flex;
+
+}
+.title1{
+word-break: break-all;}
+
+  </style>
+
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="crud">
+    <!-- <div class="head">
+      <h1>Product Management System</h1>
+    </div> -->
+    <div class="inputs">
+      <input placeholder="اسم المنتج" type="text" id="title">
+      <input placeholder=" المندوب" type="text" id="name">
+      <input placeholder=" المندوب" type="text" style="display: none;" id="name2">
+
+      <div class="price">
+        <input onkeyup="getTotal()" placeholder="سعر المبيع" type="number" id="price">
+        <input onkeyup="getTotal()" placeholder="2سعر المبيع" type="number" style="display: none;"  id="price2">
+
+        <input onkeyup="getTotal()"  placeholder="سعر المفرد" type="number" id="c">
+        <input onkeyup="getTotal()"  placeholder="2سعر المفرد" type="number" style="display: none;"  id="c2">
+        <input onkeyup="getTotal()" placeholder="الحسم" type="date" id="date">
+
+        <input onkeyup="getTotal()" placeholder="الحسم" type="number" id="discount">
+        <small id="total"></small>
+        <!-- <input placeholder="title" type="text" id="title"> -->
+      </div>
+      <input onkeyup="getTotal2()" placeholder="عدد القطع" type="number" id="count">
+      <input onkeyup="getTotal2()" placeholder=" عدد القطع المضافة حديثا " style="display: none;" type="number" id="count222">
+
+      <input onkeyup="getTotal2()" placeholder="2عدد القطع" style="display: none;" type="number" id="count22">
+
+      <!-- <input onkeyup="getTotal2()" placeholder="عدد القطع" type="number" id="count2"> -->
+
+      <small id="total2"></small>
+
+      <input placeholder="الصنف" type="text" id="category">
+      <button id="submit" style="font-size: 20px;">انشاء</button>
+      <button class="hide" id="hide" type="button"> المنتجات</button>
+      <button class="hide" id="hide1" type="button" > فواتير  </button>
+      <button class="hide" id="hide2" type="button">   الارباح </button>
+
+    </div>      
+
+    <div class="outputs" id="s" style="display:none;">
+      <div class="search">
+        <input onkeyup="searchData(this.value)" placeholder="بحث" type="text" id="search">
+      <div class="btnsearch">
+        <button onclick="getSearchMood(this.id)" id="searchTitle">بحث عن اسم المنتج</button>
+        <button onclick="getSearchMood(this.id)" id="searchCategory">بحث عن الصنف</button>
+
+      </div>
+      <div class="deleteAll" id="deleteAll"></div>
+      <div class="countp" id="countp"></div>
+
+      <table>
+        <tr>
+          <th>id</th>
+          <th>الاسم</th>
+          <th>السعر</th>
+          <th>الكلي</th>
+          <th>الصنف</th>
+          <th>تحديث</th>
+          <th>حذف</th>
+
+        </tr>
+        <tbody id="tbody" >
+         
+        </tbody>
+      </table>
+      </div>
+    </div>
+   
+
+    <div class="outputs" id="ss" style="display: none;">
+      <div class="search">
+       <input onkeyup="searchData3(this.value)" placeholder="بحث" type="text" id="search">
+      <!-- <div class="btnsearch">
+        <button onclick="getSearchMood(this.id)" id="searchTitle">بحث عن اسم المنتج</button>
+        <button onclick="getSearchMood(this.id)" id="searchCategory">بحث عن الصنف</button>
+
+      </div>  -->
+      <div class="deleteAll" id="deleteAll"></div>
+      <div class="countp" id="countp"></div>
+
+      <table class="table2">
+        <!-- <tr >
+          <th>المنتج</th>
+          <th>المندوب</th>
+          <th>سعر المبيع</th>
+          <th>سعر المفرد</th>
+          <th>العدد</th>
+
+          <th>السعر الكلي</th>
+          <th> ربح القطعة</th>
+          <th> ربح الاجمالي</th>
+          <th>تحديث</th>
+
+        </tr> -->
+        <tbody id="tbody2">
+         
+        </tbody>
+      </table>
+      
+     
+
+      </div>
+    </div>
+    <div class="outputs" id="sss" style="display: none;">
+      <div class="search">
+        <input onkeyup="searchData2(this.value)" placeholder="بحث" type="text" id="search">
+
+       
+      <div class="deleteAll" id="deleteAll"></div>
+      <div class="countp" id="countp"></div>
+
+      <table id="table11" style="margin-top:30px;">
+        <tr>
+          <th>المنتج المباع  </th>
+
+          <th>عدد القطع المباعة</th>
+          <th>ربح القطع المباعة</th>
+
+        
+
+        </tr>
+        <tbody id="tbody3" >
+         
+        </tbody>
+      </table>
+      </div>
+      <span id="val" style="font-size: 20px;position: relative;bottom:10px ;top: 5px;border-bottom:1px solid #fff;border-top:1px solid #fff ;font-weight: bold;"></span>
+      <span id="val1" style="font-size: 20px;position: relative;bottom:10px ;top: 5px;border-bottom:1px solid #fff;border-top:1px solid #fff ;font-weight: bold;"></span>
+
+    </div>
+  </div>
+  
+  <script >
+    let title=document.getElementById('title')
+const price=document.getElementById('price')
+let discount=document.getElementById('discount')
+let total=document.getElementById('total')
+let total2=document.getElementById('total2')
+let count2=document.getElementById('count')
+let name=document.getElementById('name')
+const c=document.getElementById('c')
+let count22=document.getElementById('count22')
+let rrr=document.getElementById('rrr')
+let count222=document.getElementById('count222')
+let date=document.getElementById('date')
+
+let count=document.getElementById('count')
+let category=document.getElementById('category')
+let submit=document.getElementById('submit')
+
+let mood='create'
+let tmp
+let c2=document.getElementById('c2')
+
+let price2=document.getElementById('price2')
+let name2=document.getElementById('name2')
+
+
+let hide=document.getElementById('hide').addEventListener('click',function(e){
+  if(e.target.className=='hide'){
+    document.getElementById('s').style.display='block'
+    e.target.className='show'
+    document.getElementsByClassName('show').textContent='عرض المنتجات'
+
+  }else if(e.target.className=='show'){
+    document.getElementById('s').style.display='none'
+    e.target.className='hide';
+    document.getElementsByClassName('show').textContent='اخفاء المنتجات'
+
+  }
+
+})
+let hide1=document.getElementById('hide1').addEventListener('click',function(e){
+  if(e.target.className=='hide'){
+    document.getElementById('ss').style.display='block'
+    e.target.className='show'
+    document.getElementsByClassName('show').textContent='عرض المنتجات'
+
+  }else if(e.target.className=='show'){
+    document.getElementById('ss').style.display='none'
+    e.target.className='hide';
+    document.getElementsByClassName('show').textContent='اخفاء المنتجات'
+
+  }
+
+})
+let hide2=document.getElementById('hide2').addEventListener('click',function(e){
+  if(e.target.className=='hide'){
+    document.getElementById('sss').style.display='block'
+    e.target.className='show'
+    document.getElementsByClassName('show').textContent='عرض المنتجات'
+
+  }else if(e.target.className=='show'){
+    document.getElementById('sss').style.display='none'
+    e.target.className='hide';
+    document.getElementsByClassName('show').textContent='اخفاء المنتجات'
+
+  }
+
+})
+
+function getTotal(){
+  if(price.value != ''){
+    let result= +price.value - +discount.value;
+    total.innerHTML=result;
+    total.style.background='#040'
+  }else{
+    total.innerHTML='';
+    total.style.background='#a00d02'
+  }
+
+}
+function getTotal2(){
+  if(price.value != ''){
+
+    let result1= (+price.value - +discount.value) * +count.value;
+    let result2= (+c.value - +discount.value) * +count.value;
+
+    total2.innerHTML=result1;
+    total.innerHTML=result2;
+
+    total2.style.background='#040'
+  }else{
+    total2.innerHTML='';
+    total2.style.background='#a00d02'
+  }
+
+}
+let data
+if(localStorage.product != null){
+  data=JSON.parse(localStorage.product)
+}else{
+  data=[]
+}
+submit.onclick =function(){
+  let newproduct={
+    title:title.value.toLowerCase(),
+    price:[price.value],
+    discount:discount.value,
+    total:total2.innerHTML,
+    total2:total.innerHTML,
+    count:count.value,
+    count22:count22.value,
+    count222:count222.value,
+    date:date.value,
+
+    count2:count.value,
+    name:name.value,
+    c:[c.value],
+    price2:price2.value,
+    c2:c2.value,
+    category:category.value.toLowerCase(),
+  }
+  
+  if(mood ==='create'){
+   
+  if(newproduct.count>1){
+  // for(let i=0;i<newproduct.count;i++){
+    data.unshift(newproduct)
+  // const ss=[count2.value]
+  // }
+  }else{
+    data.unshift(newproduct)
+
+  }
+}else{
+  
+  data.unshift(newproduct)
+
+   mood='create'
+  submit.innerHTML='Create'
+  count.style.display='block'
+}
+  localStorage.setItem('product', JSON.stringify(data))
+  cleardata()
+  showdata()
+}
+
+function cleardata(){
+  title.value='';
+  price.value='';
+  discount.value='';
+  total.innerHTML='';
+  count.value='';
+  category.value='';
+  c.value='';
+  name.value=''
+}
+
+function showdata(){
+  getTotal()
+  let table = '';
+  for(let i = 0 ;i<data.length;i++){
+    table += `
+    <tr>
+    <td>${i+1}</td>
+    <td class="title1">${data[i].title}</td>
+    <td>${data[i].price}</td>
+    <td>${data[i].total}</td>
+    <td>${data[i].category}</td>
+   
+
+    <td><button id="update" onclick="updateData(${i})">تحديث</button></td>
+    <td><button onclick="deleteData(${i})" id="delete11"><span id='d'>${(+data[i].count  + +data[i].count22)}</span></button></td>
+
+    </tr>
+    ` 
+    
+  }
+  
+    // <th>    الربح للبضاعة الجديدة:   ${(data[i].price- data[i].c)*data[i].count222}</th>
+    // <th>العدد:   ${data[i].count222}</th>
+
+
+  getTotal()
+  let table2 = '';
+  for(let i = 0 ;i<data.length;i++){
+    table2 += `
+    <tr>
+      <th>المنتج:  ${data[i].title}  |   المندوب:  ${data[i].name}</th>
+       
+   
+    <th> سعر المبيع:  ${data[i].price}</th>
+
+    
+    <th> سعر المفرد:  ${data[i].c}</th>
+
+    
+    <th>العدد الكلي:   ${+data[i].count2  + +data[i].count22}</th>
+
+    
+
+    <th>  ربح القطعة:   ${data[i].price- data[i].c}</th>
+
+
+    <th>   الربح الاجمالي:   ${(data[i].price- data[i].c)*(+data[i].count2  + +data[i].count22)}</th>
+    <th>    تاريخ الشراء:   ${data[i].date}</th>
+
+    
+
+    <td><button id="update" onclick="updateData(${i})">تحديث</button></td>
+
+    </tr>
+    <br>
+    <hr style="height:30px;background-color:#222">
+    ` 
+   
+
+  }
+      // <th> السعر الكلي:  ${data[i].total2}</th>
+
+  getTotal()
+  var Total_Value = 0;
+
+let table3 = '';
+
+for(let i=0;i<data.length;i++){
+  Total_Value += [+data[i].price  - +data[i].c];
+ 
+  table3 += `
+  <tr>
+    <td class="title1">${data[i].title}</td>
+
+   <td id='r'><input id='rr' style='width:70px' value='${(+data[i].count2 ) - +data[i].count}'></td>
+
+   <td id='sum1'>${(+data[i].price - +data[i].c) * (+data[i].count2  - +data[i].count)}</td>
+
+   <td>  ${data[i].date}</td>
+
+ 
+  <td><span onclick="deleteAll(${i})"  id="deleteAll" >${+data[i].count  + +data[i].count22}  حذف</span></td>
+
+
+  </tr>
+
+  ` 
+}
+var table11 = document.getElementById("table"), sumVal = 0;
+            
+            for(var i = 0; i < data.length; i++)
+            {
+                sumVal = sumVal + parseInt((data[i].price- data[i].c) * (data[i].count2-data[i].count));
+            }
+            
+            document.getElementById("val").innerHTML = "الارباح الكلية = " + sumVal;
+
+
+  document.getElementById('tbody3').innerHTML=table3
+  document.getElementById('tbody').innerHTML=table
+  document.getElementById('tbody2').innerHTML=table2
+
+  let btnDelete = document.getElementById('deleteAll')
+  
+
+ 
+}
+showdata()
+
+
+
+
+
+function deleteData(i){
+  data[i].count = data[i].count -1
+  if( (+data[i].count  + +data[i].count22)<0){
+   document.getElementById('d')[+data[i].count  + +data[i].count22].style.display='none'   
+  }
+   data[i].price- data[i].c
+   
+   localStorage.product = JSON.stringify(data)
+  showdata()
+}
+
+function deleteAll(i){
+  // localStorage.clear()
+   // document.getElementById('tbody3').style.display='none'
+   if (confirm("هل تريد الحذف!")) {
+    data.splice(i,1)
+  localStorage.product = JSON.stringify(data)
+} else {
+  txt = "You pressed Cancel!";
+}
+  
+
+  showdata()
+
+}
+
+
+function updateData(i){
+  title.value=data[i].title;
+  price.value=data[i].price
+  c.value=data[i].c
+  count.value=data[i].count
+  date.value=data[i].date
+
+  name.value=data[i].name
+  getTotal()
+  // count.style.display='none'
+  category.value=data[i].category
+  // c2.style.display='block'
+  // price2.style.display='block'
+  // count22.style.display='block'
+  category.style.display='none'
+  count.style.display='block'
+  // count222.style.display='block'
+
+  c.style.display='block'
+  price.style.display='block'
+  name.style.display='block'
+  title.style.display='block'
+  submit.innerHTML='تحديث'
+  mood='update'
+  tmp=i
+  scroll({
+    top:0,
+    behavior:'smooth'
+  })
+}
+
+
+let searchMood= 'اسم المنتج';
+function getSearchMood(id){
+  let search=document.getElementById('search')
+  if(id == 'searchTitle'){
+    searchMood= 'اسم المنتج';
+  }else{
+    searchMood= 'الصنف';
+
+  }
+  search.placeholder='بحث عن '+searchMood
+
+  search.focus()
+  search.value=''
+  showdata()
+}
+
+function searchData(value){
+  let table=''
+  
+
+  for(let i=0;i<data.length;i++){
+    if(data[i].title.includes(value)){
+      table += `
+      <tr>
+      <td>${i}</td>
+      <td class="title1">${data[i].title}</td>
+      <td>${data[i].price}</td>
+      <td>${data[i].total}</td>
+      <td>${data[i].category}</td>
+      <td><button id="update" onclick="updateData(${i})">تحديث</button></td>
+      <td><button onclick="deleteData(${i})"  id="delete">${data[i].count}  حذف</button></td>
+
+  
+      </tr>
+      ` 
+   
+    //   let btncount = document.getElementById('countp')
+    //   if(data.length>0){
+    //       btncount.innerHTML=`
+    //     <button id="deleteAll" onclick="showdata()">الشراء:  (${data[i].count2}) |المتبقي : (${data[i].count})</button>
+    //     `
+    //     // (${data.filter(s => s.title === data[i].title ).length })
+    //   }else{
+    //     btnDelete.innerHTML=''
+    //   }
+     }
+     else{
+      if(data[i].category.includes(value)){
+      table += `
+      <tr>
+      <td>${i}</td>
+      <td class="title1">${data[i].title}</td>
+      <td>${data[i].price}</td>
+      <td>${data[i].total}</td>
+      <td>${data[i].category}</td>
+      <td><button id="update" onclick="updateData(${i})">تحديث</button></td>
+      <td><button onclick="deleteData(${i})"  id="delete">${data[i].count}  حذف</button></td>
+
+  
+      </tr>
+      ` }
+     }
+
+  }
+ 
+
+document.getElementById('tbody').innerHTML=table
+
+}
+function searchData3(value){
+  let table2=''
+  for(let i=0;i<data.length;i++){
+    if(data[i].title.includes(value)){
+      table2 += `
+      <tr>
+      <th>المنتج:  ${data[i].title}  |   المندوب:  ${data[i].name}</th>
+       
+   
+    <th> سعر المبيع:  ${data[i].price}</th>
+
+    
+    <th> سعر المفرد:  ${data[i].c}</th>
+
+    
+    <th>العدد الكلي:   ${+data[i].count2  + +data[i].count22}</th>
+
+    
+
+    <th>  ربح القطعة:   ${data[i].price- data[i].c}</th>
+
+
+    <th>   الربح الاجمالي:   ${(data[i].price- data[i].c)*(+data[i].count2  + +data[i].count22)}</th>
+    <th>    تاريخ الشراء:   ${data[i].date}</th>
+
+    
+
+    <td><button id="update" onclick="updateData(${i})">تحديث</button></td>
+
+    </tr>
+    
+    <br>
+    <hr style="height:30px;background-color:#222">
+    ` 
+   
+
+    }
+    
+  }
+
+document.getElementById('tbody2').innerHTML=table2
+
+
+
+}
+
+function searchData2(value){
+  let table3=''
+  
+
+ 
+
+  for(let i=0;i<data.length;i++){
+    if(data[i].title.includes(value)){
+      table3 += `
+     
+  <tr>
+    <td class="title1">${data[i].title}</td>
+
+   <td id='r'><input id='rr' style='width:50px' value='${(+data[i].count2 ) - +data[i].count}'></td>
+
+   <td id='sum1'>${(+data[i].price - +data[i].c) * (+data[i].count2  - +data[i].count)}</td>
+
+   <td>  ${data[i].date}</td>
+
+ 
+  <td><span onclick="deleteAll(${i})"  id="deleteAll" >${+data[i].count  + +data[i].count22}  حذف</span></td>
+
+
+  </tr>
+
+  ` 
+    
+   
+
+    }
+  }
+    document.getElementById('tbody3').innerHTML=table3
+  
+  }
+  </script>
+</body>
+</html>
+
+
+
